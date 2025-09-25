@@ -2,8 +2,8 @@ body, html {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100%; /* 常に画面いっぱいに */
-    overflow: hidden; /* スクロールを禁止し、画面内の演出に集中 */
+    height: 100%;
+    overflow: hidden; 
     background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #ffc3a0 100%);
     font-family: 'Noto Serif JP', serif;
     color: #fff;
@@ -15,12 +15,14 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; /* ここを100%に */
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     z-index: 10;
+    box-sizing: border-box; /* paddingとborderを幅に含める */
+    padding: 20px; /* 画面端に余白を追加 */
 }
 
 #background-hearts {
@@ -65,7 +67,8 @@ body, html {
     padding: 30px 50px;
     border-radius: 20px;
     box-shadow: 0 0 30px rgba(255, 105, 180, 0.7);
-    box-sizing: border-box; /* paddingとborderを幅に含める */
+    box-sizing: border-box;
+    max-width: 90%; /* 画面幅の90%に制限 */
 }
 
 .main-message {
@@ -174,16 +177,19 @@ body, html {
     50% { transform: scale(1.03); }
 }
 
-/* スマホ対応 */
+/* 画面幅が600px以下のデバイス向け（スマホ最適化） */
 @media (max-width: 600px) {
+    #message-area {
+        padding: 20px;
+    }
     .main-message {
-        font-size: 3em; /* スマホでは小さく */
+        font-size: 3em; /* スマホでは文字サイズを小さく */
     }
     .sub-message {
-        font-size: 1em;
+        font-size: 1.2em;
     }
     #surprise-button {
-        padding: 15px 30px;
+        padding: 15px 25px;
         font-size: 1em;
     }
 }
