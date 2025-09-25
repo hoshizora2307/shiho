@@ -3,8 +3,8 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
-    /* 修正前: overflow: hidden; */
-    background: linear-gradient(135deg, #f5a4a4, #ff69b4);
+    overflow: hidden; /* スクロールはさせないで、画面いっぱいの演出に集中 */
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #ffc3a0 100%); /* より可愛らしいグラデーション */
     font-family: 'Noto Serif JP', serif;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
@@ -21,13 +21,38 @@ body, html {
     z-index: 10;
 }
 
-#heart-container {
+/* 背景のゆっくり動くハート */
+#background-hearts {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    overflow: hidden; /* 背景ハートがはみ出してもスクロールさせない */
+    z-index: 0; /* メッセージより奥に */
+    pointer-events: none;
+}
+
+.bg-heart {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.2); /* 透明度を上げて背景感 */
+    animation: float-bg-heart var(--duration) ease-in-out infinite;
+}
+
+@keyframes float-bg-heart {
+    0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { transform: translateY(-120vh) rotate(360deg) scale(1.2); opacity: 0; }
+}
+
+
+#heart-sparkle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* メッセージより手前 */
     pointer-events: none;
 }
 
@@ -36,57 +61,101 @@ body, html {
     z-index: 2;
     text-align: center;
     animation: pulse-message 3s infinite;
+    background: rgba(255, 255, 255, 0.2); /* メッセージエリアに半透明の背景 */
+    padding: 30px 50px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 105, 180, 0.7); /* ハート色の光るシャドウ */
 }
 
 .main-message {
     font-family: 'Kaushan Script', cursive;
-    font-size: 5em;
+    font-size: 5.5em; /* さらに大きく */
     font-weight: bold;
-    letter-spacing: 2px;
-    animation: fade-in 2s ease-out;
+    letter-spacing: 3px; /* 隙間も少し広げる */
+    animation: fade-in 2s ease-out, glow-text 1.5s infinite alternate; /* 光る文字 */
+    color: #ffcc00; /* ゴールドっぽい色に */
 }
 
+@keyframes glow-text {
+    from { text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff69b4; }
+    to { text-shadow: 0 0 20px #ffcc00, 0 0 40px #ff69b4; }
+}
+
+
 .sub-message {
-    font-size: 1.5em;
+    font-size: 1.8em; /* サブメッセージも大きく */
     margin-top: 20px;
     opacity: 0;
     animation: fade-in-up 1.5s ease-out 2s forwards;
+    color: #ffe0b2; /* 優しい色に */
 }
 
 #surprise-button {
     margin-top: 40px;
-    padding: 15px 30px;
-    font-size: 1.2em;
+    padding: 20px 40px; /* ボタンも大きく */
+    font-size: 1.5em; /* ボタンの文字も大きく */
     font-weight: bold;
-    background-color: #ffcc00;
+    background: linear-gradient(45deg, #ff4081, #ff80ab); /* グラデーションボタン */
     border: none;
     border-radius: 50px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 20px rgba(255, 64, 129, 0.5); /* 派手なシャドウ */
+    color: #fff;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    animation: bounce 2s infinite;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: bounce 2s infinite, pulse-button 1.5s infinite alternate; /* ボタンも光らせる */
 }
 
 #surprise-button:hover {
-    transform: scale(1.1);
-    background-color: #ffe066;
+    transform: scale(1.15); /* もっと大きく */
+    box-shadow: 0 8px 25px rgba(255, 64, 129, 0.8);
+}
+
+@keyframes pulse-button {
+    from { box-shadow: 0 5px 20px rgba(255, 64, 129, 0.5); }
+    to { box-shadow: 0 8px 25px rgba(255, 64, 129, 0.8); }
 }
 
 /* ハートと星のエフェクト */
-.heart, .star {
+.particle-heart, .particle-star, .particle-sparkle {
     position: absolute;
-    animation: float-up 5s ease-in forwards;
+    animation: float-up var(--duration) ease-in forwards;
     opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity; /* パフォーマンス改善 */
 }
 
-.heart {
-    color: #ff69b4;
-    font-size: 2em;
+.particle-heart {
+    color: #ff69b4; /* 鮮やかなピンク */
+    font-size: 2.5em; /* 大きめ */
+    animation-name: float-up-heart;
 }
 
-.star {
-    color: #ffd700;
-    font-size: 1.5em;
+.particle-star {
+    color: #ffd700; /* ゴールド */
+    font-size: 1.8em;
+    animation-name: float-up;
+}
+
+.particle-sparkle {
+    color: #ffffff; /* 白いキラキラ */
+    font-size: 1.2em;
+    animation-name: float-up;
+}
+
+
+@keyframes float-up-heart {
+    0% {
+        transform: translateY(0) scale(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+        transform: scale(1) rotate(20deg);
+    }
+    100% {
+        transform: translateY(-120vh) scale(1.8) rotate(360deg);
+        opacity: 0;
+    }
 }
 
 @keyframes float-up {
@@ -98,7 +167,7 @@ body, html {
         opacity: 1;
     }
     100% {
-        transform: translateY(-1000px) scale(1.5);
+        transform: translateY(-120vh) scale(1.5);
         opacity: 0;
     }
 }
@@ -133,10 +202,5 @@ body, html {
 
 @keyframes pulse-message {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-@keyframes rotate-heart {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    50% { transform: scale(1.03); } /* 脈動を少し控えめに */
 }
