@@ -1,0 +1,142 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5a4a4, #ff69b4);
+    font-family: 'Noto Serif JP', serif;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+#app-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+}
+
+#heart-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#message-area {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    animation: pulse-message 3s infinite;
+}
+
+.main-message {
+    font-family: 'Kaushan Script', cursive;
+    font-size: 5em;
+    font-weight: bold;
+    letter-spacing: 2px;
+    animation: fade-in 2s ease-out;
+}
+
+.sub-message {
+    font-size: 1.5em;
+    margin-top: 20px;
+    opacity: 0;
+    animation: fade-in-up 1.5s ease-out 2s forwards;
+}
+
+#surprise-button {
+    margin-top: 40px;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: #ffcc00;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+    animation: bounce 2s infinite;
+}
+
+#surprise-button:hover {
+    transform: scale(1.1);
+    background-color: #ffe066;
+}
+
+/* ハートと星のエフェクト */
+.heart, .star {
+    position: absolute;
+    animation: float-up 5s ease-in forwards;
+    opacity: 0;
+}
+
+.heart {
+    color: #ff69b4;
+    font-size: 2em;
+}
+
+.star {
+    color: #ffd700;
+    font-size: 1.5em;
+}
+
+@keyframes float-up {
+    0% {
+        transform: translateY(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-1000px) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes pulse-message {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes rotate-heart {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
